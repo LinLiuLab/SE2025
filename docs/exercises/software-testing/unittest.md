@@ -24,29 +24,34 @@ TDD 的过程通常遵循“红-绿-重构”（Red-Green-Refactor）的循环�
 
 因此，无论是从提高代码质量、减少沟通成本，还是从美学和心理健康的角度来看，统一的代码风格都是非常有益的。
 
-代码风格检查有多种工具，下面是一些常用的工具：
+随着项目规模的增长，人工维护风格变得困难，因此自动化工具显得尤为重要。
 
-- [flake8](https://flake8.pycqa.org/en/latest/)：检查代码风格和错误。
-- [autoflake](https://github.com/PyCQA/autoflake)：自动删除无用的导入和变量。
-- [autopep8](https://pypi.org/project/autopep8/)：自动修复代码风格错误。
-- [isort](https://github.com/PyCQA/isort)：自动对导入进行排序和格式化。
+**Ruff** 是近年来非常流行的一体化 Python 代码风格与质量检查工具。它由 Rust 编写，速度极快，同时整合了多个常用工具的功能，比如 flake8、isort、pyupgrade 和 black 风格的代码格式化。换句话说，Ruff 可以做到“一个工具覆盖大部分需求”，大大简化了开发环境配置。
 
-以上几种工具均可以使用 `pip` 进行安装。
+Ruff 的常用功能包括：
 
-- `flake8` 可以自动检查代码是否符合 PEP8 规范。
-    ```shell
-    $ flake8 .
-    ```
-- `autoflake` 和 `autopep8` 可以自动修复不符合规范的代码。
-    ```shell
-    $ autoflake .
-    $ autopep8 --in-place --recursive .
-    ```
-- `isort` 可以自动对导入进行排序和格式化。
-    ```shell
-    $ isort .
-    ```
-这些工具都支持通过**配置文件**的形式来配置检查规则，以 `flake8` 为例，在运行 `flake8` 的目录下创建 `.flake8` 文件，那么在运行时会自动读取该文件中的配置。
+- 代码风格检查：检测是否符合 PEP8 等规范，并发现潜在错误。  
+- 自动修复：自动删除无用的导入、变量，并修正部分风格问题。  
+- 导入排序：内置 isort 规则，可以统一导入顺序。  
+- 代码格式化：提供与 Black 兼容的格式化功能，保证代码风格一致。  
+
+
+Ruff 支持通过配置文件来定制规则。常见的做法是将配置写在 pyproject.toml 文件中，例如：
+
+```toml
+[tool.ruff]
+line-length = 100        # 设置每行的最大长度为 100，超过会报 E501（行过长）
+target-version = "py311" # 指定目标 Python 版本
+
+[tool.ruff.lint]
+select = ["E", "W"]      # 启用的规则类别
+ignore = ["E203"]        # 忽略特定规则
+
+```
+
+
+
+
 
 ## 单元测试
 单元测试是软件开发中的一种测试方法，它的主要目标是验证代码中的最小可测试单元（通常是函数、方法或类）是否按预期工作。每个单元测试都应该是独立的，可以单独运行，而不依赖于任何其他代码或外部资源。
